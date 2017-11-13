@@ -11,6 +11,12 @@ public class Member {
 
     private final HazelcastInstance hazelcastInstance;
 
+    private static final String PARTITION_KEY;
+
+    static {
+        PARTITION_KEY = UUID.randomUUID().toString();
+    }
+
     public Member() {
         hazelcastInstance = Hazelcast.newHazelcastInstance();
     }
@@ -18,7 +24,7 @@ public class Member {
     // --- distributed queue example ---
     public void createDistributedQueue() throws InterruptedException {
 
-        IQueue<String> myQueue = hazelcastInstance.getQueue("myQueue");
+        IQueue<String> myQueue = hazelcastInstance.getQueue("myQueue@" + PARTITION_KEY);
 
         for (int i = 0; i < 10; i++) {
             myQueue.put(UUID.randomUUID().toString());
@@ -28,7 +34,7 @@ public class Member {
 
     public void printDistributedQueueElements() throws InterruptedException {
 
-        IQueue<String> myQueue = hazelcastInstance.getQueue("myQueue");
+        IQueue<String> myQueue = hazelcastInstance.getQueue("myQueue@" + PARTITION_KEY);
 
         while (!myQueue.isEmpty()) {
             String result = myQueue.take();
@@ -42,14 +48,14 @@ public class Member {
 
     public void createCountdownLatch() {
 
-        ICountDownLatch myCountdownLatch = hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH);
+        ICountDownLatch myCountdownLatch = hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH + "@" + PARTITION_KEY);
         myCountdownLatch.trySetCount(2);
 
     }
 
     public void countdownLatchByOne() {
 
-        ICountDownLatch myCountdownLatch = hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH);
+        ICountDownLatch myCountdownLatch = hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH + "@" + PARTITION_KEY);
         myCountdownLatch.countDown();
         System.out.println(Thread.currentThread().getName() + ", countdownlatch by one...");
 
@@ -59,7 +65,7 @@ public class Member {
 
 
         try {
-            ICountDownLatch myCountdownLatch = hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH);
+            ICountDownLatch myCountdownLatch = hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH + "@" + PARTITION_KEY);
 
             System.out.println(Thread.currentThread().getName() + ", waiting in countdown-latch...");
 
@@ -80,9 +86,9 @@ public class Member {
     // --- distributed map example ---
     public void createDistributedMap() {
 
-        IMap<Long, Student> myMap = hazelcastInstance.getMap(DistributedConstants.DISTRIBUTED_MAP);
+        IMap<Long, Student> myMap = hazelcastInstance.getMap(DistributedConstants.DISTRIBUTED_MAP + "@" + PARTITION_KEY);
 
-        IdGenerator myIdGenerator = hazelcastInstance.getIdGenerator(DistributedConstants.ID_GENERATOR);
+        IdGenerator myIdGenerator = hazelcastInstance.getIdGenerator(DistributedConstants.ID_GENERATOR + "@" + PARTITION_KEY);
 
         for (int i = 0; i < 10; i++) {
             long key = myIdGenerator.newId();
@@ -93,7 +99,7 @@ public class Member {
 
     public void printEntriesOfDistributedMap() {
 
-        IMap<Long, Student> myMap = hazelcastInstance.getMap(DistributedConstants.DISTRIBUTED_MAP);
+        IMap<Long, Student> myMap = hazelcastInstance.getMap(DistributedConstants.DISTRIBUTED_MAP + "@" + PARTITION_KEY);
 
         myMap.forEach((key, value) -> System.out.println("entry, key = " + key + ", value = " + value));
 
@@ -102,10 +108,10 @@ public class Member {
     // --- release operation ---
     public void releaseResources() {
 
-        hazelcastInstance.getMap(DistributedConstants.DISTRIBUTED_MAP).destroy();
-        hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH).destroy();
-        hazelcastInstance.getIdGenerator(DistributedConstants.ID_GENERATOR).destroy();
-        hazelcastInstance.getQueue("myQueue").destroy();
+        hazelcastInstance.getMap(DistributedConstants.DISTRIBUTED_MAP + "@" + PARTITION_KEY).destroy();
+        hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH + "@" + PARTITION_KEY).destroy();
+        hazelcastInstance.getIdGenerator(DistributedConstants.ID_GENERATOR + "@" + PARTITION_KEY).destroy();
+        hazelcastInstance.getQueue("myQueue" + "@" + PARTITION_KEY).destroy();
 
     }
 

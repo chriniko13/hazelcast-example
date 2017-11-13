@@ -20,6 +20,4 @@
 
     </network>
 
-    <queue name="myQueue"/>
-
 </hazelcast>
