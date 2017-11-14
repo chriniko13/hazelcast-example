@@ -1,4 +1,4 @@
-package hazelcast.example.configuration;
+package hazelcast.example.chapter2.configuration;
 
 public class DistributedConstants {
 

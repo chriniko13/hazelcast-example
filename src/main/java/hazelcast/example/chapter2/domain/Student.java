@@ -1,4 +1,4 @@
-package hazelcast.example.domain;
+package hazelcast.example.chapter2.domain;
 
 import lombok.*;
 

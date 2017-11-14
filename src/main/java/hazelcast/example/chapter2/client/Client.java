@@ -1,6 +1,6 @@
-package hazelcast.example.client;
+package hazelcast.example.chapter2.client;
 
-import hazelcast.example.member.Member;
+import hazelcast.example.chapter2.member.Member;
 
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +78,13 @@ public class Client {
         System.out.println("--- RELEASE RESOURCES EXAMPLE ---");
         member1.releaseResources();
         System.out.println("\n");
+
+
+        // --- shutdown example ---
+        System.out.println("--- SHUTDOWN EXAMPLE ---");
+        member1.shutdown();
+        member2.shutdown();
+        member3.shutdown();
 
     }
 }

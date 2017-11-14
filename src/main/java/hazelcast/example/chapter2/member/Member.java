@@ -1,8 +1,8 @@
-package hazelcast.example.member;
+package hazelcast.example.chapter2.member;
 
 import com.hazelcast.core.*;
-import hazelcast.example.configuration.DistributedConstants;
-import hazelcast.example.domain.Student;
+import hazelcast.example.chapter2.configuration.DistributedConstants;
+import hazelcast.example.chapter2.domain.Student;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +20,7 @@ public class Member {
     public Member() {
         hazelcastInstance = Hazelcast.newHazelcastInstance();
     }
+
 
     // --- distributed queue example ---
     public void createDistributedQueue() throws InterruptedException {
@@ -112,6 +113,13 @@ public class Member {
         hazelcastInstance.getCountDownLatch(DistributedConstants.COUNT_DOWN_LATCH + "@" + PARTITION_KEY).destroy();
         hazelcastInstance.getIdGenerator(DistributedConstants.ID_GENERATOR + "@" + PARTITION_KEY).destroy();
         hazelcastInstance.getQueue("myQueue" + "@" + PARTITION_KEY).destroy();
+
+    }
+
+    // --- shutdown operation example ---
+    public void shutdown() {
+
+        hazelcastInstance.shutdown();
 
     }
 
